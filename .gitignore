@@ -1,0 +1,34 @@
+app/img/*
+app/error.txt
+app/__pycache__/*
+app/mecab-python3-1.0.8.tar.gz
+app/text_bubbles/*
+app/translated_img/*
+app/tessdata/*
+app/try/*
+app/model/*
+!app/model/character/new_added/weights/best.pt
+!app/model/gender/
+app/character_recog/*
+app/*.jpg
+app/*.png
+app/prompt_template.txt
+app/test.ipynb
+app/test.ipynb
+app/10.txt
+app/preparedatset.py
+app/requirements_old.txt
+app/response.json
+app/../data/manga_bG4M0XBS7oQd_lsm/
+data/*
+app/test.py
+app/.env
+app/error.json
+app/config/*
+app/app.log
+app/overlay.ipynb
+app/data.json
+app/tasks_back.py
+
+# app/env.py
+# app/config/*

@@ -1,0 +1,20 @@
+runtime: custom
+env: flex
+
+manual_scaling:
+  instances: 1  # Defines the number of instances
+
+resources:
+  cpu: 3
+  memory_gb: 4
+  disk_size_gb: 20
+
+entrypoint: gunicorn -w 2 -k uvicorn.workers.UvicornWorker --timeout 190 main:app
+
+network:
+  forwarded_ports:
+    - 8080
+    - 8000
+
+env_variables:
+  WEAVIATE_URL: "http://weaviate:8080"  # Adjust as necessary

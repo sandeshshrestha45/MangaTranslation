@@ -1,0 +1,90 @@
+services:
+  web:
+    container_name: comitee
+    build: .
+    image: comiteapp:latest
+    restart: always
+    ports:
+      - 80:8000
+    volumes:
+      - ./app/.:/app
+    depends_on:
+      - weaviate
+      - redis
+    environment:
+      CELERY_BOKER_URL:  redis://redis:6379/0
+      WEAVIATE_URL: http://weaviate:8080
+
+  weaviate:
+    command:
+        - --host
+        - 0.0.0.0
+        - --port
+        - "8080"
+        - --scheme
+        - http
+        - --read-timeout
+        - "600s"   # Read timeout set to 600 seconds
+        - --write-timeout
+        - "600s" 
+    image: semitechnologies/weaviate:1.21.2
+    ports:
+      - 8080:8080
+    volumes:
+      - ./data:/var/lib/weaviate
+    restart: on-failure:0
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+      DEFAULT_VECTORIZER_MODULE: "text2vec-huggingface"
+      HUGGINGFACE_APIKEY: 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
+      ENABLE_MODULES: "text2vec-cohere,text2vec-huggingface,text2vec-palm,text2vec-openai,generative-openai,generative-cohere,generative-palm,ref2vec-centroid,reranker-cohere,qna-openai"
+      CLUSTER_HOSTNAME: "node1"
+  
+  celery:
+    build: .
+    image: comiteapp:latest
+    container_name: celery
+    command: celery -A tasks worker --loglevel=info  --concurrency=3
+    restart: always
+    volumes:
+      - ./app/.:/app
+    depends_on:
+      - redis
+      - web
+      - weaviate
+    environment:
+      CELERY_BROKER_URL:  redis://redis:6379/0
+      WEAVIATE_URL: http://weaviate:8080
+    
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  flower:
+    build: .
+    image: comiteapp:latest
+    command: celery -A tasks flower
+    volumes:
+      - ./app/.:/app
+    restart: always
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
+      - web
+      - weaviate
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      WEAVIATE_URL: http://weaviate:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - ./app/.:/app
+ 

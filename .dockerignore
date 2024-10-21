@@ -1,0 +1,8 @@
+app/img/*
+app/translated_img/
+app/model/*
+!app/model/character/
+!app/model/gender/
+app/__pycache__/**
+app/*.jpg
+app/*.png
