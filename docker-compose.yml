@@ -1,8 +1,8 @@
 services:
   web:
-    container_name: comitee
+    container_name: container name
     build: .
-    image: comiteapp:latest
+    image: image name
     restart: always
     ports:
       - 80:8000
@@ -44,7 +44,7 @@ services:
   
   celery:
     build: .
-    image: comiteapp:latest
+    image: image name
     container_name: celery
     command: celery -A tasks worker --loglevel=info  --concurrency=3
     restart: always
