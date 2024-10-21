@@ -63,7 +63,7 @@ services:
 
   flower:
     build: .
-    image: comiteapp:latest
+    image: image name
     command: celery -A tasks flower
     volumes:
       - ./app/.:/app
